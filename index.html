@@ -30,14 +30,15 @@
 </head>
 <body>
 <div class="container">
-  <a id="myLink">点击这里</a>
+  <a id="myLink" href="#">点击这里</a>
 </div>
 <script>
   function myFunction() {
-   window.location.href = "https://avrukou.com";
+    window.location.href = "https://avrukou.com";
   }
+
   var link = document.getElementById("myLink");
-  link.addEventListener("click", function(event) 
+  link.addEventListener("click", function(event) {
     event.preventDefault();
     myFunction();
   });
