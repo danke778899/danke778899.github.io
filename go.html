@@ -11,30 +11,31 @@ window.onload = function() {
     // 默认跳转地址
     const defaultUrl = 'http://www.dankeshipin.com';
 
-    // 使用Fetch API获取远程文件内容
-    fetch(txtFileUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            // 将文件内容按行分割成数组，每行一个域名
-            const domains = data.trim().split('\n').map(domain => domain.trim());
+    // 函数用于创建JSONP请求
+    function fetchDomains() {
+        const script = document.createElement('script');
+        script.src = txtFileUrl + '?callback=handleResponse';
+        document.body.appendChild(script);
+    }
 
-            // 随机选择一个域名
-            const randomIndex = Math.floor(Math.random() * domains.length);
-            const randomDomain = domains[randomIndex];
+    // 处理JSONP响应的回调函数
+    function handleResponse(data) {
+        // 检查是否成功获取到数据
+        if (Array.isArray(data) && data.length > 0) {
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const randomDomain = data[randomIndex];
 
             // 执行跳转到随机选择的域名
             window.location.href = 'http://' + randomDomain;
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            // 如果无法获取域名列表，跳转到默认地址
+        } else {
+            console.error('Invalid domain data received:', data);
+            // 如果数据无效或为空，跳转到默认地址
             window.location.href = defaultUrl;
-        });
+        }
+    }
+
+    // 在页面加载时触发JSONP请求
+    fetchDomains();
 };
 </script>
 </head>
