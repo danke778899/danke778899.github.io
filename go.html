@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Domain Redirect</title>
+<script>
+window.onload = function() {
+    // 远程的txt文件URL
+    const txtFileUrl = 'https://us.guide.edu.eu.org/yuminglieibao/ym.txt';
+    // 默认跳转地址
+    const defaultUrl = 'http://www.210qq.com/';
+
+    // 使用Fetch API获取远程文件内容
+    fetch(txtFileUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            // 将文件内容按行分割成数组，每行一个域名
+            const domains = data.trim().split('\n').map(domain => domain.trim());
+
+            // 随机选择一个域名
+            const randomIndex = Math.floor(Math.random() * domains.length);
+            const randomDomain = domains[randomIndex];
+
+            // 执行跳转到随机选择的域名
+            window.location.href = 'http://' + randomDomain;
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            // 如果无法获取域名列表，跳转到默认地址
+            window.location.href = defaultUrl;
+        });
+};
+</script>
+</head>
+<body>
+</body>
+</html>
