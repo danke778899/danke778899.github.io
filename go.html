@@ -6,38 +6,35 @@
 <title>Random Domain Redirect</title>
 <script>
 window.onload = function() {
-    // 远程的txt文件URL
-    const txtFileUrl = 'https://us.guide.edu.eu.org/yuminglieibao/ym.txt';
+    // 本地的txt文件URL，注意路径根据实际情况修改
+    const txtFileUrl = 'domains.txt';
     // 默认跳转地址
     const defaultUrl = 'http://www.dankeshipin.com';
 
-    // 函数用于创建JSONP请求
-    function fetchDomains() {
-        const script = document.createElement('script');
-        script.src = txtFileUrl + '?callback=handleResponse';
-        document.body.appendChild(script);
-    }
+    // 使用Fetch API获取本地文件内容
+    fetch(txtFileUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            // 将文件内容按行分割成数组，每行一个域名
+            const domains = data.trim().split('\n').map(domain => domain.trim());
 
-    function handleResponse(data) {
-        console.log('Received domain data:', data);
-
-        if (Array.isArray(data) && data.length > 0) {
-            const randomIndex = Math.floor(Math.random() * data.length);
-            const randomDomain = data[randomIndex];
-
-            console.log('Selected random domain:', randomDomain);
+            // 随机选择一个域名
+            const randomIndex = Math.floor(Math.random() * domains.length);
+            const randomDomain = domains[randomIndex];
 
             // 执行跳转到随机选择的域名
             window.location.href = 'http://' + randomDomain;
-        } else {
-            console.error('Invalid domain data received:', data);
-            // 如果数据无效或为空，跳转到默认地址
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            // 如果无法获取域名列表，跳转到默认地址
             window.location.href = defaultUrl;
-        }
-    }
-
-    // 在页面加载时触发JSONP请求
-    fetchDomains();
+        });
 };
 </script>
 </head>
