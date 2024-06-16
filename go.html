@@ -18,24 +18,23 @@ window.onload = function() {
         document.body.appendChild(script);
     }
 
-function handleResponse(data) {
-    console.log('Received domain data:', data);
+    function handleResponse(data) {
+        console.log('Received domain data:', data);
 
-    // 在这里检查 data 的内容是否符合预期的格式和结构
+        if (Array.isArray(data) && data.length > 0) {
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const randomDomain = data[randomIndex];
 
-    if (Array.isArray(data) && data.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.length);
-        const randomDomain = data[randomIndex];
+            console.log('Selected random domain:', randomDomain);
 
-        // 执行跳转到随机选择的域名
-        window.location.href = 'http://' + randomDomain;
-    } else {
-        console.error('Invalid domain data received:', data);
-        // 如果数据无效或为空，跳转到默认地址
-        window.location.href = defaultUrl;
+            // 执行跳转到随机选择的域名
+            window.location.href = 'http://' + randomDomain;
+        } else {
+            console.error('Invalid domain data received:', data);
+            // 如果数据无效或为空，跳转到默认地址
+            window.location.href = defaultUrl;
+        }
     }
-}
-
 
     // 在页面加载时触发JSONP请求
     fetchDomains();
